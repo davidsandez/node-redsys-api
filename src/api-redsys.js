@@ -6,14 +6,25 @@ const base64url = require('base64url');
 const { zeroPad, zeroUnpad } = require('./utils');
 
 class Redsys {
-  encrypt3DES(str, key) {
+  /* encrypt3DES(str, key) {
     const secretKey = Buffer.from(key, 'base64');
     const iv = Buffer.alloc(8, 0);
     const cipher = crypto.createCipheriv('des-ede3-cbc', secretKey, iv);
     cipher.setAutoPadding(false);
     return cipher.update(zeroPad(str, 8), 'utf8', 'base64')
      + cipher.final('base64');
-  }
+  } */
+
+  encrypt3DES(str, key) {
+    const secretKey = Buffer.from(key, 'base64');
+    const iv = Buffer.alloc(8, 0);
+    const cipher = crypto.createCipheriv('des-ede3-cbc', secretKey, iv);
+    cipher.setAutoPadding(false);
+    const en_key = cipher.update(zeroPad(str, 8), 'utf8', 'binary') + cipher.final('binary');
+    const l = Math.ceil(str.length / 8) * 8;
+    //$message = $message.str_repeat("\0", $l - strlen($message));
+    return Buffer.from(en_key.substr(0, l), 'binary').toString('base64');
+}
 
   decrypt3DES(str, key) {
     const secretKey = Buffer.from(key, 'base64');
