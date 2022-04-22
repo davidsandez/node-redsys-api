@@ -23,7 +23,8 @@ class Redsys {
     const en_key = cipher.update(zeroPad(str, 8), 'utf8', 'binary') + cipher.final('binary');
     const l = Math.ceil(str.length / 8) * 8;
     //$message = $message.str_repeat("\0", $l - strlen($message));
-    return Buffer.from(en_key.substr(0, l), 'binary').toString('base64');
+    //return Buffer.from(en_key.substr(0, l), 'binary').toString('base64');
+    return Buffer.from(en_key.slice(0, l), 'binary').toString('base64');
 }
 
   decrypt3DES(str, key) {
